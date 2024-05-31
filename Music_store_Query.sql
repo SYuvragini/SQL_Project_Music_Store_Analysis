@@ -22,7 +22,8 @@ ORDER BY c DESC;
 
 SELECT total 
 FROM invoice
-ORDER BY total DESC;
+ORDER BY total DESC
+LIMIT 1;
 
 
 
@@ -53,7 +54,8 @@ Write a query that returns the person who has spent the most money.*/
 SELECT c.first_name, c.customer_id, sum(i.total) AS revenue
  FROM customer c join invoice i ON c.customer_id = i.customer_id
  GROUP BY c.first_name, c.customer_id
- ORDER BY revenue DESC;
+ ORDER BY revenue DESC
+ LIMIT 1;
  
  /* Question Set 2 */
  
@@ -61,8 +63,9 @@ SELECT c.first_name, c.customer_id, sum(i.total) AS revenue
 Return your list ordered alphabetically by email starting with A. */
 
 SELECT DISTINCT c.first_name, c.last_name, c.email
- FROM customer c join invoice i ON c.customer_id = i.customer_id
-				JOIN invoice_line il ON i.invoice_id = il.invoice_id
+FROM customer c 
+Join invoice i ON c.customer_id = i.customer_id
+JOIN invoice_line il ON i.invoice_id = il.invoice_id
 WHERE track_id IN(
                   SELECT track_id 
                   FROM track t
@@ -73,13 +76,16 @@ ORDER BY c.email;
 /* Q2: Let's invite the artists who have written the most rock music in our dataset. 
 Write a query that returns the Artist name and total track count of the top 10 rock bands. */
 
- SELECT artist_id,title FROM album2
- GROUP BY artist_id;
+
  
  SELECT a.name, COUNT(track_id) as total_track_count
- FROM artist a JOIN album2 al ON a.artist_id = al.artist_id
-			   JOIN track t ON al.album_id = t.album_id
-WHERE t.genre_id IN (SELECT g.genre_id FROM genre g WHERE g.name='rock')
+ FROM artist a 
+ JOIN album2 al ON a.artist_id = al.artist_id
+ JOIN track t ON al.album_id = t.album_id
+WHERE t.genre_id IN
+	 (SELECT g.genre_id 
+	 FROM genre g 
+	 WHERE g.name='rock')
 GROUP BY a.name
 ORDER BY total_track_count DESC
 LIMIT 10;
@@ -151,17 +157,26 @@ For countries where the top amount spent is shared, provide all customers who sp
 /* Steps to Solve:  Similar to the above question. There are two parts in question- 
 first find the most spent on music for each country and second filter the data for respective customers. */
 
-WITH RECURSIVE country_with_cutomer AS(
-    SELECT c.customer_id, c.first_name, c.last_name, i.billing_country,SUM(i.total) AS total_Spending
-    FROM customer c JOIN invoice i ON c.customer_id = i.customer_id
-    GROUP BY 1,2,3,4
-    ORDER BY 5 DESC
+WITH RECURSIVE 
+	country_with_customer AS(
+             SELECT c.customer_id, c.first_name, c.last_name, i.billing_country,SUM(i.total) AS total_Spending
+             FROM customer c 
+             JOIN invoice i ON c.customer_id = i.customer_id
+             GROUP BY c.customer_id, c.first_name, c.last_name, i.billing_country
+             ORDER BY total_Spending DESC
 	
-    UNION ALL
-      SELECT i.billing_country, max(total_spending) AS max_Spending
-    FROM country_with_cutomer cc WHERE cc.total_Spending = max_Spending)
-   
-   SELECT * FROM country_with_cutomer;
+        country_max_spending AS(
+		SELECT billing_country,MAX(total_spending) AS max_spending
+		FROM customter_with_country
+		GROUP BY billing_country)
+
+SELECT cc.billing_country, cc.total_spending, cc.first_name, cc.last_name, cc.customer_id
+FROM customter_with_country cc
+JOIN country_max_spending ms
+ON cc.billing_country = ms.billing_country
+WHERE cc.total_spending = ms.max_spending
+ORDER BY 1;
+	
      
 					    
 
