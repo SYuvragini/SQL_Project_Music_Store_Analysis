@@ -5,7 +5,8 @@ In this project I have examined the dataset with SQL to help the store understan
 
 
 
-Database and Tools
+## Database and Tools
 MySQL
 PgAdmin4
 Schema- Music Store Database
+![MusicDatabaseSchema](https://user-images.githubusercontent.com/112153548/213707717-bfc9f479-52d9-407b-99e1-e94db7ae10a3.png)
