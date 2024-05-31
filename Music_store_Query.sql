@@ -25,19 +25,6 @@ FROM invoice
 ORDER BY total DESC
 LIMIT 1;
 
-
-
-
-SELECT billing_country,
-       COUNT(customer_id) as no_of_invoices
-       FROM invoice
-       GROUP BY  billing_country
-       ORDER BY no_of_invoices DESC;
-       
-       SELECT total FROM invoice
-       ORDER BY total desc
-       LIMIT 3;
-
 /* Q4: Which city has the best customers? We would like to throw a promotional Music Festival in the city we made the most money. 
 Write a query that returns one city that has the highest sum of invoice totals. 
 Return both the city name & sum of all invoice totals */
