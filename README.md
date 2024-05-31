@@ -1,7 +1,7 @@
 # SQL_Project_Music_Store_Analysis
-This project uses SQL for analysing online music store data.
+In this project  I have used SQL for analysing online music store dataset.
 
-In this project I have examined the dataset with SQL to help the store understand its business growth by answering simple questions.
+The objective here is to help the store understand its business growth by answering simple questions.
 
 
 
